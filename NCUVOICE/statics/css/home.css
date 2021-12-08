@@ -1,0 +1,67 @@
+#top_bar{
+  position:fixed;
+  z-index:1;
+  width: 100%;
+  top:0;
+}
+
+#searchbutton{
+  background-color:rgb(178, 172, 189);
+  border-radius: 3px;
+  padding:3px;
+  border: 1px;
+  color: #000;
+}
+.navbar{
+  background-color:rgba(43, 39, 71, 0.849);
+}
+
+
+body{
+	height: 100%;
+    width: 100%;
+    padding-top: 10px;
+    margin-top: 100px;
+    align-content: center;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    flex-direction: row;
+    display: flex;
+	/*Image only BG fallback*/
+	background-size: cover;
+	/*background = gradient + image pattern combo*/
+	background: 
+		linear-gradient(rgba(196, 102, 0, 0.6), rgba(155, 89, 182, 0.6)) center center fixed no-repeat;;
+}
+
+.card-title{
+  color:#000;
+}
+
+.card-text{
+  color:#000;
+}
+
+.card{
+  float:left;
+}
+
+a:link{
+  text-decoration:none;
+  color:#ffffff;
+  }
+  a:visited {
+  text-decoration:none;
+  color:#ffffff;
+  }
+  a:hover {
+  text-decoration:underline;
+  background-color:rgb(178, 172, 189);
+  color:rgb(255, 255, 255);
+  }
+  a:active {
+  text-decoration:none;
+  background-color:rgb(143, 132, 236);
+  color:#fafafa;
+  }

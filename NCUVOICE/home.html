@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>NCU Voice - Home</title>
+    <link href="statics/css/style.css" rel="stylesheet">
+	<link href="statics/css/home.css" rel="stylesheet">
+    <!-- Bootstrap CSS   -->
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+ 
+    <script src="statics/js/jquery-3.4.1.min.js"> </script>
+</head>
+
+<body>
+    <!-- TOP BAR   -->
+    <section id="top_bar">
+		<nav class="navbar  navbar-dark bg-dark navbar-expand-sm" id= "nav-main" > 
+			<div class="container-fluid" >
+				<div class="navbar-brand">
+					<img src="statics/img/logo.png" width="80" height="80" alt="">
+					NCU Voice
+				</div>
+			  
+			  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent"style="margin-left: 50px;">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="home.html" style="background:rgb(178, 172, 189)";>Home</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link active" href="mylist.html">My list</a>
+				  </li>
+				  <!-- link 到上傳介面   -->
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="upload.html">Upload</a>
+				  </li>
+
+				  <!-- link 到結帳介面   -->
+				  <li class="nav-item">
+					<a class="nav-link active" href="checkout.html" style="border-radius: 30px;border: 1px solid #ffffff; margin-left: 10px;">Get Premium</a>
+				  </li>
+	  
+				</ul>
+				
+				
+				
+				<form class="d-flex" style="position:absolute; right:30px;">
+	              	<input class="form-control me-2" id="songname" type="search" placeholder="Search" aria-label="Search">
+	              	<button class="nav-link active" type="button" id="submit" aria-current="page">Search</button>
+	            </form>
+
+	            
+			  </div>
+			</div>
+		  </nav>
+    </section>
+    </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+     </br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br></br>
+
+
+    <!-- 首頁歌曲   -->
+    <div id="song_perform">
+    	<div id="product_panel" class="row" style="margin-bottom:50px;">
+      	</div>
+    </div>
+    
+	
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script type="text/javascript">   
+    //var [client_cart_obj, client_cart_amount]  = getCartDataFromClient();
+    $(document).ready(function() {
+    	getCookie();
+    	getAllSong();
+        // 處理表單點擊事件
+        var $form = $('#submit');
+        $form.click(function() {
+        	search();
+    	});
+    });
+    function getAllSong() {
+      $.ajax({
+        type: "GET",
+        url: "api/song.do",
+        crossDomain: true,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+        	var product_panel = '';
+        	
+        	$.each(response.response.data, function (){
+        		product_panel += addSong(this);
+        	})
+        	
+        	$("#product_panel").append(product_panel);
+        	//setButtonFunction();
+          }
+        },
+        error: function () {
+          alert("無法連線到歌曲伺服器!");
+        }
+      });
+    }
+    	 
+    function addSong(data) {
+    	let inner_html = '';
+    	inner_html += '<div class="card" style="width: 300px; margin-left: 150px; margin-top: 50px;">';
+   		inner_html += '<img src="upload/' + data.name + '.jpg" class="card-img-top">';
+   		inner_html += '<div class="card-body">';
+ 		inner_html += '<h5 class="card-title">'+ data.name + '</h5>';
+ 		inner_html += '<p class="card-text">'+ data.name +'</p>';
+ 		inner_html += '<a href="player.html?id='+data.song_id+'" class="btn btn-primary" style="background-color: rgb(192, 192, 192);border: 1px solid rgb(192, 192, 192);" onclick="playsong('+data.song_id+')"> Play</a>';
+		inner_html += '<a href="#" class="btn btn-primary" style="background-color: rgb(192, 192, 192);border: 1px solid rgb(86, 158, 84);" onclick="addtoplaylist('+data.song_id+')">+ Add to My list</a>';
+		inner_html += '</div></div>';
+		
+		return inner_html;
+    }
+    
+    function search() {
+    	$('#product_panel').html("");
+    	var id = $('#songname').val();
+    	
+        $.ajax({
+            type: "GET",
+            url: "api/song.do",
+            data: "name=" + id.toString(),
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+              if (response.status == 200) {
+            	var product_panel = '';
+            	
+            	$.each(response.response.data, function (){
+            		product_panel += addSong(this);
+            	})
+            	
+            	$("#product_panel").append(product_panel);
+            	//setButtonFunction();
+              }
+            },
+            error: function () {
+              alert("無法連線到歌曲伺服器!");
+            }
+          });
+    }
+    
+    function playsong(id){
+		console.log(id);
+		localStorage.clear();
+		localStorage.setItem('nowplay', id);
+	}
+	
+	function addtoplaylist(id){
+		var data_object = {"song_id": id};
+		var data_string = JSON.stringify(data_object);
+
+		$.ajax({
+                type: "POST",
+                url: "api/playlist.do",
+                data: data_string,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success: function (response) {
+                    $('#flashMessage').html(response.message);
+                    $('#flashMessage').show();
+                    if(response.status == 200){
+				    console.log(response);
+                    }
+                    },
+                    error: function () {
+					  alert("無法連線到伺服器！");
+					  console.log(response);
+                      }
+                });
+						
+	}
+    
+    function getCookie(){
+        // 發出POST的AJAX請求
+        $.ajax({
+            type:"GET",
+            url: "api/cookie.do",
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function(response){
+                if(response.status == 200){
+                	console.log(response);
+                    //alert("獲取cookie成功");
+                }
+            },
+            error: function(){
+                alert("無法連線到快取伺服器!");
+                //console.log(response);
+            }
+        });
+    }
+    
+/*  function setButtonFunction() {
+    	$('button[name="Jumpsong"]').click(function () {
+    		var id = (this.id).split('_')[1];
+    		submit(id);
+        });
+    }
+    function submit(id) {
+        // 將資料組成JSON格式
+        var data_object = {
+            "song_id":id
+        };
+
+        // 將JSON格式轉換成字串
+        var data_string = JSON.stringify(data_object);
+
+        // 發出POST的AJAX請求
+        $.ajax({
+            type: "POST",
+            url: "api/cookie.do",
+            data: data_string,
+            crossDomain: true,
+            cache: false,
+            dataType: 'json',
+            timeout: 5000,
+            success: function (response) {
+                if(response.status == 200){
+                    //alert("新增歌曲快取成功");
+                	console.log(response);
+                }
+            },
+            error: function () {
+                alert("無法連線到歌曲快取伺服器!");
+            }
+        });
+    }
+*/
+  </script>
+  
+</body>
+</html>

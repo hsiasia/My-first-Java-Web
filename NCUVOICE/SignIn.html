@@ -1,0 +1,117 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="statics/css/style1.css" rel="stylesheet">
+
+    <!-- 匯入Bootstrap CSS   -->
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 匯入css -->
+    <link rel="stylesheet" type="text/css" href="statics/css/style1.css">
+    <title>SIGN-IN</title>
+    <script src="statics/js/jquery-3.4.1.min.js"> </script>
+    <style>
+      body {
+            background-image: url(statics/img/SignIn_WOR.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+      }
+    </style>
+    
+  </head>
+  <body>
+    <!-- 功能列 -->
+        <nav class="navbar  navbar-dark bg-dark navbar-expand-sm" id= "nav-main">
+      <div class="container-fluid">
+        <div class="navbar-brand" href="index.html">
+          <img src="statics/img/logo.png" width="80" height="80" alt="">
+          NCU Voice
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+        
+      </div>
+    </nav>
+    <!-- Sign-in區塊 -->
+    <div class="container">
+      <div class="header">
+        <h1>Sign In</h1>
+      </div>
+      <form class="form" id="form">
+        <div class="form-control">
+          <label for="member_email">Email</label>
+          <input type="text" placeholder="Enter your Email" id="member_email" name="name" required="required">
+          <br>
+          <label for="member_password">Password</label>
+          <input name="password" type="password" placeholder="Enter your Password"  id="member_password" required="required">          
+          <br>
+          <input type="button" value="SIGN IN" id="signIN">
+          <button type="button" class="btn btn-light" onclick="location.href='SignUP.html';">SIGN UP</button>
+        </div>
+      </form>
+      <!-- 事件處理 -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+        <script language="javascript" type="text/javascript">
+          $(function() {
+            // set a event handler to the button
+            $("#signIN").click(function () {
+       
+              // retrieve form data
+              var user_email = $('#member_email').val();
+              var user_password = $('#member_password').val();
+              
+               //將資料組成JSON格式
+              var data_object = {
+                "email": user_email,
+                "password": user_password
+              };
+              // 將JSON轉成字串
+              var data_string = JSON.stringify(data_object);
+              
+              // send form data to the server side php script.
+              $.ajax({
+                type: "POST",
+                url: "api/membermusiclogin.do", //要呼叫的do程式 不知道你們寫在哪
+                data: data_string,
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                timeout: 5000,
+                success :function(response){
+                	if(response.status == 200){
+                		console.log(response);
+  
+                		location.href = "home.html";
+                		
+                	}else{
+                		console.log(response);
+                		alert('帳號或是密碼錯了');
+                	}
+                }
+              })
+              
+            });
+        });
+        </script>
+
+      </script>
+	
+
+
+    </div>
+
+
+
+  
+
+
+
+    </section>
+
+    
+
+  </body>
+</html>

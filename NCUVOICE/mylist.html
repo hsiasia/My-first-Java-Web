@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="statics/css/style.css" rel="stylesheet">
+
+    <!-- Bootstrap CSS   -->
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <link href="statics/css/mylist.css" rel="stylesheet">
+ 
+    
+
+    <title>NCU Voice - My list</title>
+    <script src="statics/js/jquery-3.4.1.min.js"> </script>
+  
+</head>
+
+<body>
+<!-- TOP BAR   -->
+       <section id="top_bar">
+		<nav class="navbar  navbar-dark bg-dark navbar-expand-sm" id= "nav-main" > 
+			<div class="container-fluid" >
+				<div class="navbar-brand">
+					<img src="statics/img/logo.png" width="80" height="80" alt="">
+					NCU Voice
+				</div>
+			  
+			  <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+				<span class="navbar-toggler-icon"></span>
+			  </button>
+			  <div class="collapse navbar-collapse" id="navbarSupportedContent" style="margin-left: 50px;">
+				<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="home.html">Home</a>
+				  </li>
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="mylist.html" style="background:rgb(178, 172, 189)";>My list</a>
+				  </li>
+				  <!-- link 到上傳介面   -->
+				  <li class="nav-item">
+					<a class="nav-link active" aria-current="page" href="upload.html" >Upload</a>
+				  </li>
+
+				  <!-- link 到結帳介面   -->
+				  <li class="nav-item">
+					<a class="nav-link active" href="checkout.html" style="border-radius: 30px;border: 1px solid #ffffff; margin-left: 10px;">Get Premium</a>
+				  </li>
+	  
+				</ul>
+				
+			  </div>
+			</div>
+		  </nav>
+    </section>
+       <!-- 歌單   -->
+      <section id="song_list">
+              <table id="list"> 
+              <COL width="5%">
+              <COL width="70%">
+              <COL width="25%">
+                <tr> 
+                 <th>Member</th> 
+                 <th>Song Name</th>
+                 <th>        </th>
+                </tr>
+              </table>
+       </section>
+        
+
+
+
+
+
+        <!-- For remove button   -->
+      <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+      <script type="text/javascript">
+
+        function getCookie(){
+                // 發出POST的AJAX請求
+                $.ajax({
+                    type:"GET",
+                    url: "api/cookie.do",
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function(response){
+                        if(response.status == 200){
+                        //alert("獲取cookie成功");
+                        }
+                        console.log(response);
+                    },
+                    error: function(){
+                        alert("無法得到cookie!!!");
+                        console.log(response);
+                    }
+                });
+            }
+         
+         
+          function getAllSongInPlaylist() {
+                    $.ajax({
+                            type: "GET",
+                            url: "api/playlist.do",
+                            crossDomain: true,
+                            cache: false,
+                            dataType: 'json',
+                            timeout: 5000,
+                            success: function (response) {
+                              if (response.status == 200) {
+        	                    var playlist_panel = '';
+        	
+        	                    $.each(response.response.data, function (){
+                                playlist_panel += addSong(this);
+        	                    })
+        	
+        	                    $("#list").append(playlist_panel);
+                            }
+                            },
+                            error: function () {
+                                alert("無法連線到伺服器！");
+                            }
+                    });
+                }
+        
+    function addSong(data) {
+      let inner_html = '';
+    	inner_html += '<tr>';
+   		inner_html += '<td>'+data.playlist_MemID+'</td>';
+   		inner_html += '<td><a href="player.html?id='+data.playlist_SongID+'" onclick= "playsong('+data.playlist_SongID+')">Song'+data.playlist_SongID+'</a></td>';
+ 		  inner_html += '<td><input id="remove_bt" type="button" value="Remove" onclick="deleteSong('+data.playlist_SongID+',this)"></td>';
+ 		  inner_html += '</tr>';
+ 		
+    	
+		return inner_html;
+    }
+    
+
+
+    function playsong(id){
+		console.log(id);
+		localStorage.clear();
+		localStorage.setItem('nowplay', id);
+    }
+    
+
+
+    function deleteSong(id,rmbt) {
+                    var check = window.confirm("確定刪除這首歌？");
+                    if (check == true) {
+                        console.log("You pressed OK!");
+                        var request = {'id': id};
+                        var data_string = JSON.stringify(request);
+                        $.ajax({
+                            type: "DELETE",
+                            url: "api/playlist.do",
+                            crossDomain: true,
+                            data: data_string,
+                            cache: false,
+                            dataType: 'json',
+                            timeout: 5000,
+                            success: function (response) {
+                                if(response.status == 200){
+                                    $("#flashMessage").html("成功! 已經成功刪除會員...");
+                                    $("#flashMessage").show();
+                                }
+                                console.log(response);
+                            },
+                            error: function () {
+                                alert("無法連線到伺服器！");
+                            }
+                        });
+                    var row = rmbt.parentNode.parentNode;  
+                    var tb = row.parentNode;   
+                    var rowIndex = row.rowIndex;	
+                    tb.deleteRow(rowIndex);
+                    }
+                    else {
+                        console.log("You pressed Cancel!");
+                    }
+                }
+    
+
+        $(document).ready(function() {
+        getCookie();
+        getAllSongInPlaylist();
+    });
+    
+      </script> 
+    
+</body>
+</html>

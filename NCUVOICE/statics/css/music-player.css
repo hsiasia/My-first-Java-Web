@@ -1,0 +1,129 @@
+* {
+  margin: 0;
+  padding: 0;
+  font-family: "敺株�迤暺��", "Microsoft JhengHei", "Segoe UI Semibold",
+    "Segoe UI", "Lucida Grande";
+}
+
+.main {
+  position: relative;
+  height: 80%;
+  width: 100%;
+  display: flex;
+  margin-right: 30px;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(#6e6e74, #000000);
+  color: white;
+}
+
+.img {
+  width: 100px;
+  height: 100px;
+  box-shadow: 1px 0px 20px 12px rgba(240, 240, 240, 0.2);
+}
+
+.main button {
+  padding: 10px 12px;
+  margin: 0 10px;
+}
+
+.main #logo {
+  position: absolute;
+  top: 0px;
+  left: 30px;
+  font-size: 25px;
+  color: #ccc;
+}
+
+.box-left {
+  position: relative;
+  width: 500px;
+  height: 60%;
+  left: -30px;
+  top: 50px;
+}
+.box-right {
+  position: relative;
+  width: 1000px;
+  height: 60%;
+  left: 0x;
+  top: 10px;
+}
+
+.box-bottom {
+  position: relative;
+  height: 15%;
+  width: 100%;
+  background: #29292b;
+}
+
+#title {
+  font-size: 80px;
+}
+
+p {
+  font-size: 20px;
+}
+
+input[type="range"] {
+  outline: none;
+  height: 2px;
+}
+
+.vol {
+  position: absolute;
+  bottom: 18%;
+  left: 10%;
+  width: 10%;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+}
+.up button {
+  height: 50px;
+  width: 50px;
+
+  position: relative;
+  top: 15px;
+  left: 46%;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: 0.5s;
+  background: #29292b;
+  margin: 5px;
+  color: white;
+}
+.dur {
+  position: absolute;
+  bottom: 18%;
+  left: 52%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20%;
+  height: 20px;
+  margin-top: 40px;
+}
+
+.box-bottom #volume_icon {
+  position: absolute;
+  bottom: 10%;
+  left:8%;
+ 
+  font-size: 25px;
+  color: #ccc;
+}
+
+#play {
+  background: #ff8a65;
+}
+
+.showSong {
+  width: 400px;
+  height: 300px;
+}

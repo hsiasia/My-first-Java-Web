@@ -1,0 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&family=Bebas+Neue&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+/* everthing */
+*{
+    box-sizing: border-box;
+}
+
+body{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 100vh;
+    margin: 0;
+    padding-top: 150px;
+    
+}
+
+.container{
+    background-color:rgb(178, 172, 189);
+    border-radius: 5px;
+    width: 400px;
+    height: auto;
+    max-width: 100%;
+}
+
+.header{
+    padding: 10px 10px; /* top and bottom: 10px padding */ /* left and right: 10px padding */
+    border-bottom: 1px solid;
+}
+.header h1{
+    font-family: 'Bebas Neue', cursive;
+    margin: 0;
+    text-align: center;
+}
+.navbar {
+  overflow: hidden;
+  position: fixed;
+  top: 0;
+  width: 100%; /*有這個navbar會從置中變成一整排*/
+}
+
+.form{
+    padding: 10 px 20px;
+    text-emphasis: none;;
+}
+
+.form-control{
+    margin-bottom: 10px;
+    padding-bottom: 10px;
+    position: relative;
+    background-color: rgb(178, 172, 189);
+    font-size: 20 px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+}
+
+.form-control label{
+    display: inline-block;
+    margin: 5px;
+}
+
+.form-control input{
+    border: 2px solid #f0f0f0;
+    border-radius: 4px;
+    display: block; /*輸入欄換行*/
+    font-family: 'Open Sans', sans-serif;
+    font-size: 14px;
+    width: 100%;
+}
+
+.form button{
+    border: 2px;
+    border-radius: 4px;
+    display: block;
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px 10px;
+    width: 100%;
+}
+
+/* submit button */
+#submit{
+    border: 2px;
+    border-radius: 4px;
+    display: block;
+    background-color:rgba(43, 39, 71, 0.849);
+    font-size: 30px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px 10px;
+    width: 100%;    
+}
+
+#PaymentContainer{
+    background-color:rgb(178, 172, 189);
+    border-radius: 5px;
+    width: auto;
+    height: auto;
+    padding: 10px 10px;
+    max-width: 100%;
+}
+#paymentMethod{
+    border-radius: 5px;
+    padding: 10px;
+    font-family: 'Open Sans', sans-serif;
+    height:fit-content;
+    width: fit-content;
+}
+#submit_payment{
+    border: 1px;
+    border-radius: 2px;
+    display: block;
+    background-color:rgba(43, 39, 71, 0.849);
+    font-size: 15px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: right;   
+
+}
+
+#signIN{
+    border: 2px;
+    border-radius: 4px;
+    display: block;
+    background-color:rgba(43, 39, 71, 0.849);
+    font-size: 20px;
+    font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+    padding: 10px 10px;
+    margin-bottom: 12px;
+    width: 100%;    
+}

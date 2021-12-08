@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+  <link rel="stylesheet" href="statics/css/music-player.css">
+  <link rel="stylesheet" href="statics/css/style.css">
+  <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+
+  <title>Document</title>
+</head>
+
+<body>
+  <nav class="navbar  navbar-dark bg-dark navbar-expand-sm" id="nav-main">
+    <div class="container-fluid">
+      <a class="navbar-brand" href="home.html"> NCUVoice</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent"
+        aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      
+
+      </div>
+    </div>
+  </nav>
+
+
+
+  <div class="main">
+    <p id="logo"><i class="fa fa-music" aria-hidden="true"></i> music-player</p>
+    <div class="box-left">
+      <!--- song image-->
+      <img class="showSong current-song" id="track_image">
+
+    </div>
+
+    <div class="box-right">
+
+      <br>
+      <h5 class="word Sname">歌名</h5>
+      <br>
+      <h4 class="word Stitle" id="title"></h4>
+      <br>
+
+
+      <h5 class="word Sartist" id="artist">來自 </h5>
+        <br>
+
+
+        <p class="word" id="info"> </p>
+        <button onclick="add_to_playlist()" id="add"> <i class="far fa-heart"></i> 加入歌單 </button>
+
+
+
+    </div>
+
+    <div>
+
+    </div>
+
+  </div>
+
+
+  <div class="box-bottom">
+    <div class="up">
+      <button class="btt" onclick="" id="pre"><i class="fa fa-step-backward"
+          aria-hidden="true"></i></button>
+      <button class="btt" id="pause" onclick="pauseSong()"> <i class="fa fa-pause" aria-hidden="true"></i></i></button>
+      <button class="btt" onclick="" id="next"><i class="fa fa-step-forward" aria-hidden="true"></i></button>
+    </div>
+    <div class="volume1">
+
+      <i class="fa fa-volume-up" aria-hidden="true" id="volume_icon"></i>
+      <input class="vol" type="range" min="0" max="100" value="90" id="volume" onchange="volume_change()">
+    </div>
+    <div class="duration">
+      <input class="dur" type="range" min="0" max="100" value="0" id="duration_slider" onchange="change_duration()">
+    </div>
+
+
+
+
+  </div>
+  <!-- <script src="statics/js/music-player.js"></script> -->
+  <script src="statics/js/jquery-3.4.1.min.js"> </script>
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+  <script type="text/javascript">
+    var readytoplay = '';
+    var audio = new Audio();
+    var Playing_song = true;
+    var updateTimer;
+    var mem_status;
+
+    var url_string = window.location.href;
+    var url = new URL(url_string);
+    var id = url.searchParams.get("id");
+
+    function play_current_song() {
+        function getCookie(){
+            // 發出POST的AJAX請求
+            var memberstatus;
+            $.ajax({
+                type:"GET",
+                url: "api/cookie.do",
+                crossDomain: true,
+                cache: false,
+                dataType: 'json',
+                async:false,
+                timeout: 5000,
+                success: function(response){
+                    if(response.status == 200){
+                    	console.log(response);
+                    	memberstatus=response.response.data[0].status;
+                    	
+
+                    }
+                },
+                error: function(){
+                    alert("無法連線到快取伺服器!");
+                    //console.log(response);
+                }
+            });
+
+            return memberstatus;
+            
+        }
+      
+
+      $.ajax({
+        type: "GET",
+        url: "api/song.do",
+        data: "id_list=" + id,
+        crossDomain: true,
+        cache: false,
+        async:false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+        	mem_status= getCookie();
+
+            console.log(response);
+            displaysong(response.response.data);
+          }
+        },
+        error: function () {
+          alert("無法連線到伺服器！");
+
+        }
+      });
+
+    }
+
+    function displaysong(data){
+      document.getElementById("title").innerHTML = data[0].name;
+      document.getElementById("artist").innerHTML = data[0].artist;
+
+      document.getElementById("track_image").src = "upload/"+data[0].name+".jpg";
+   
+      readytoplay = data[0].name;
+      document.getElementById("duration_slider").value = 0;
+
+      playMusic();
+      updateTimer = setInterval(seek_update, 1000);
+
+    }
+
+    $("#pre").click(function(){
+      var preid = id - 1;
+      if (preid > 0){
+      $("#pre").attr("onclick","location.href='player.html?id="+preid+"'");
+      }
+    });
+
+
+    $("#next").click(function(){
+      id++;
+      $("#next").attr("onclick","location.href='player.html?id="+id+"'");
+    });
+
+    function playMusic(){
+
+        var tracksrc = "upload/"+readytoplay+".mp3";
+        audio.src = tracksrc;
+        
+        
+        audio.currentTime = 0;
+
+        document.getElementById("duration_slider").value  = 0;
+        
+        if(mem_status == 0){
+        	audio.play();
+        	seek_update();
+        	alert("未付費會員僅供試聽");
+        	
+        	audio.addEventListener('timeupdate', function () {
+        	    if (this.currentTime >= 20 && !this.paused)  {
+        	    	
+        	        this.pause();
+        	        alert("付費收聽完整歌曲");
+        	    }
+        	});
+
+        	
+        }else{
+            audio.play();
+            seek_update();
+        }
+
+
+
+
+    }
+
+    function volume_change(){
+     
+	   audio.volume = document.getElementById("volume").value / 100;
+  }
+
+  function change_duration(){
+	  var slider_position = audio.duration * (document.getElementById("duration_slider").value / 100);
+	  audio.currentTime = slider_position;
+  }
+
+  function range_slider(){
+      	var timespan =0;    
+        // update slider position
+
+		    timespan = audio.currentTime * (100 / audio.duration);
+        document.getElementById("duration_slider").val(timespan);
+	      
+}
+
+function seek_update(){
+  let seekPosition = 0;
+  seekPosition = audio.currentTime * (100 / audio.duration);
+  document.getElementById("duration_slider").value = seekPosition;
+
+}
+
+
+
+
+
+
+
+
+    function pauseSong(){
+      
+      if(Playing_song == true){
+        audio.pause();
+        Playing_song = false;
+        document.getElementById("pause").innerHTML = '<i class="fa fa-play" aria-hidden="true"></i>';
+      }else{
+        audio.play();
+        Playing_song = true;
+        document.getElementById("pause").innerHTML = '<i class="fa fa-pause" aria-hidden="true"></i>';
+      }
+ 
+
+    }
+
+
+
+       
+
+
+
+    function add_to_playlist() {
+      var id = parseInt(localStorage.getItem("nowplay"));
+      var data_object = { "song_id": id };
+      var data_string = JSON.stringify(data_object);
+
+      $.ajax({
+        type: "POST",
+        url: "api/playlist.do",
+        data: data_string,
+        crossDomain: true,
+        cache: false,
+        dataType: 'json',
+        timeout: 5000,
+        success: function (response) {
+          if (response.status == 200) {
+            console.log(response);
+          }
+        },
+        error: function () {
+          alert("無法連線到伺服器！");
+          console.log(response);
+        }
+      });
+
+    }
+  play_current_song();
+
+
+  </script>
+
+
+
+</body>
+
+</html>

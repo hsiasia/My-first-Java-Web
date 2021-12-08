@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>CheckOut</title>
+    <link href="statics/css/style2.css" rel="stylesheet">
+    <!-- 匯入Bootstrap CSS   -->
+    <link href="statics/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 匯入css -->
+    
+	<link href="statics/css/style1.css" rel="stylesheet">
+    <script src="statics/js/jquery-3.4.1.min.js"> </script>
+    <style>
+        body {
+            background-image: url(statics/img/concert.jpg);
+            background-repeat: no-repeat;
+            background-size: cover;
+        }
+    </style>
+</head>
+<body>
+      <section id="top_bar">
+      <nav class="navbar  navbar-dark bg-dark navbar-expand-sm" id= "nav-main" > 
+        <div class="container-fluid" >
+          <div class="navbar-brand">
+            <img src="statics/img/logo.png" width="80" height="80" alt="">
+            NCU Voice
+          </div>
+          
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarSupportedContent"style="margin-left: 50px;">
+          <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="home.html">Home</a>
+            </li>
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="mylist.html">My list</a>
+            </li>
+            <!-- link 到上傳介面   -->
+            <li class="nav-item">
+            <a class="nav-link active" aria-current="page" href="upload.html">Upload</a>
+            </li>
+      
+          </ul>
+          
+          </div>
+        </div>
+        </nav>
+      </section>
+    <!-- 結帳區塊 -->
+    <div class="container" id="PaymentContainer">
+        <div class="header">
+            <h1>CheckOut</h1>
+        </div>
+		<form class="form" id="form">
+			<div class="form-control" id="form-control-checkout">
+				<label for="">Choose your payment method</label>
+				<br>
+				<select name="" id="paymentMethod">
+					<option value="0">Debit or credit card</option>
+					<option value="1">Line Pay</option>
+					<option value="2">VISA</option> <!-- 我覺得改成pay by mobile比較好 -->
+				</select>
+				<br>
+				<br>
+				<button type="button" id="submit_payment">SUBMIT</button>
+			</div>
+		</form>
+    </div>
+    <!-- 事件處理 -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1/jquery.min.js"></script>
+    <script>
+        // 獲取文件物件就緒的時候。上面這段程式碼的意思是檢查文件物件直到它能夠允許被操作
+        $(document).ready(function(){
+            // 處理單點擊事件
+            var $form = $('#submit_payment');
+            $form.click(function(){
+                submit(); 
+            });
+            
+            function submit(){
+                var e = document.getElementById("paymentMethod");
+                var method = e.value; //method為變數紀錄選定option的數值
+                //var username = $('#username').val();
+
+                // JQuery檢查資料庫是否有重複資料
+
+                // 將資料組成JSON格式
+                var data_object = {
+                    //"username": username,
+                    "paymentMethod": method
+                };
+                
+                // 將JSON格式轉成字串
+                var data_string = JSON.stringify(data_object);
+                
+                // 發出POST的AJAX請求
+                $.ajax({
+                    type:"POST",
+                    url: "api/order_.do",
+                    data: data_string,
+                    crossDomain: true,
+                    cache: false,
+                    dataType: 'json',
+                    timeout: 5000,
+                    success: function(response){
+                        if(response.status == 200){
+                        	//alert(username);
+                        	//alert(method);
+                            alert("新增帳單資料成功");
+                        }
+                        console.log(response);
+                    },
+                    error: function(){
+                    	//alert(username);
+                    	//alert(method);
+                        alert("無法連線到帳單伺服器!");
+                        console.log(response);
+                    }
+
+                });
+            }
+        })
+  
+    </script>
+
+</body>
+</html>
